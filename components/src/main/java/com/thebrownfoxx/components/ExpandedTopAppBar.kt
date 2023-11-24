@@ -4,7 +4,6 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.DecayAnimationSpec
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.animateDecay
 import androidx.compose.animation.core.animateTo
 import androidx.compose.foundation.gestures.Orientation
@@ -36,12 +35,9 @@ import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Velocity
@@ -89,7 +85,7 @@ fun ExpandedTopAppBar(
     // container's scrolled color according to the app bar's scroll state.
     val colorTransitionFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
     val appBarContainerColor =
-        colorScheme.surfaceColorAtElevation(Elevation.level(3))
+        colorScheme.surfaceColorAtElevation(Elevation.level(2))
 //    val appBarContainerColor by rememberUpdatedState(
 //        lerp(
 //            start = colorScheme.surfaceColorAtElevation(Elevation.level(1)),
@@ -233,13 +229,9 @@ fun ExpandedTopAppBar(
     // This will potentially animate or interpolate a transition between the container color and the
     // container's scrolled color according to the app bar's scroll state.
     val colorTransitionFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
-    val appBarContainerColor by rememberUpdatedState(
-        lerp(
-            start = colorScheme.surfaceColorAtElevation(Elevation.level(1)),
-            stop = colorScheme.surfaceColorAtElevation(Elevation.level(3)),
-            fraction = FastOutLinearInEasing.transform(colorTransitionFraction)
-        )
-    )
+    val appBarContainerColor =
+        colorScheme.surfaceColorAtElevation(Elevation.level(2))
+
     val collapsedContentAlpha = topTitleAlphaEasing.transform(
         if (pinCollapsedContent) 1f else 2 * colorTransitionFraction - 1f
     )

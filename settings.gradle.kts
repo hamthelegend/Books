@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Books"
+rootProject.name = "Book Realm"
 include(":app")
 include(":components")
 include(":extensions")
