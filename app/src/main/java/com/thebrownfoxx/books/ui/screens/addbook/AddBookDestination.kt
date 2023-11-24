@@ -20,9 +20,7 @@ fun AddBook(navigator: DestinationsNavigator) {
         val state by state.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            navigateUp.collect {
-                navigator.navigateUp()
-            }
+            navigateUp.collect { navigator.navigateUp() }
         }
 
         AddBookScreen(
