@@ -65,7 +65,7 @@ fun AddBookScreen(
         }
 
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .indicationlessClickable { focusManger.clearFocus() },
         topBar = {
@@ -86,7 +86,7 @@ fun AddBookScreen(
     ) { contentPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(contentPadding + PaddingValues(16.dp)),
