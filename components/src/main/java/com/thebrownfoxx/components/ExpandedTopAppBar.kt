@@ -165,30 +165,31 @@ fun ExpandedTopAppBar(
                         content()
                     }
                 }
-                Box(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .height(ExpandedTopAppBar.PinnedHeight)
                         .fillMaxWidth(),
                 ) {
                     if (navigationIcon != null) {
-                        Row(modifier = Modifier.align(Alignment.CenterStart)) {
+                        Row {
                             HorizontalSpacer(width = 8.dp)
                             navigationIcon()
                         }
                     }
-                    HorizontalSpacer(width = 16.dp)
+                    HorizontalSpacer(width = 8.dp)
                     Box(
                         modifier = Modifier
-                            .graphicsLayer { alpha = collapsedContentAlpha }
-                            .align(Alignment.Center),
+                            .weight(1f)
+                            .graphicsLayer { alpha = collapsedContentAlpha },
                     ) {
                         ProvideTextStyle(value = typography.titleLarge) {
                             collapsedContent()
                         }
                     }
-                    HorizontalSpacer(width = 16.dp)
+                    HorizontalSpacer(width = 8.dp)
                     if (actionsRow != null) {
-                        Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+                        Row {
                             actionsRow()
                             HorizontalSpacer(width = 8.dp)
                         }
