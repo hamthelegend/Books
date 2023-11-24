@@ -84,13 +84,11 @@ fun AddBookScreen(
             }
         },
     ) { contentPadding ->
-        val padding = contentPadding + PaddingValues(16.dp)
-
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
                 .verticalScroll(rememberScrollState())
-                .padding(padding)
+                .padding(contentPadding + PaddingValues(16.dp))
                 .fillMaxSize(),
         ) {
             TextField(
