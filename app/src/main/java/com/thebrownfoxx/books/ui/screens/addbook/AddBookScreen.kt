@@ -87,9 +87,9 @@ fun AddBookScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(contentPadding + PaddingValues(16.dp))
-                .fillMaxSize(),
+                .padding(contentPadding + PaddingValues(16.dp)),
         ) {
             TextField(
                 label = "Title",
