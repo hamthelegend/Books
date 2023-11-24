@@ -109,7 +109,7 @@ fun AddBookScreen(
             )
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 TextField(
-                    label = "Date Published",
+                    label = "Date published",
                     value = state.datePublished?.formatted() ?: "",
                     onValueChange = stateChangeListener.onAuthorChange,
                     readOnly = true,
