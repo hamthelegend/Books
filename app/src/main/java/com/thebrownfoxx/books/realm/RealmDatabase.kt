@@ -16,6 +16,9 @@ class BookRealmDatabase {
         .build()
     private val realm = Realm.open(config)
 
+    fun getBook(id: ObjectId) =
+        realm.query<RealmBook>("id == $0", id).first().asFlow().map { it.obj }
+
     fun getAllNonFavoriteBooks() =
         realm.query<RealmBook>("favorite == $0 AND archived == $1", false, false)
             .asFlow().map { it.list }

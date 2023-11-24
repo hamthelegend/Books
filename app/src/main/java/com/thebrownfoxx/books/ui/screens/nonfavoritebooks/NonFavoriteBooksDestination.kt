@@ -9,6 +9,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.thebrownfoxx.books.application
 import com.thebrownfoxx.books.ui.components.DialogStateChangeListener
 import com.thebrownfoxx.books.ui.screens.destinations.AddBookDestination
+import com.thebrownfoxx.books.ui.screens.destinations.BookDestination
 import com.thebrownfoxx.books.ui.screens.navhost.BooksNavGraph
 
 @BooksNavGraph(start = true)
@@ -29,7 +30,7 @@ fun NonFavoriteBooks(navigator: DestinationsNavigator) {
             searchQuery = searchQuery,
             onSearchQueryChange = ::updateSearchQuery,
             onAddBook = { navigator.navigate(AddBookDestination) },
-            onOpenBook = { },
+            onOpenBook = { navigator.navigate(BookDestination(bookId = it.id)) },
             archiveDialogState = archiveDialogState,
             archiveDialogStateChangeListener = DialogStateChangeListener(
                 onInitiateAction = ::initiateArchive,

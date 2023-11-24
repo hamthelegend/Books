@@ -5,14 +5,20 @@ import java.time.Month
 
 object Sample {
     val Book = Book(
-        title = "Sober Up",
-        author = "AJR",
-        datePublished = LocalDate.of(2017, Month.JUNE, 9),
+        title = "Life is not a bed of roses!!!!!!",
+        author = "Herb Ertlinger",
+        datePublished = LocalDate.of(2023, Month.APRIL, 19),
         pages = 17,
     ).copy(pagesRead = 8)
 
     val Books = listOf(
         Book,
+        Book(
+            title = "Sober Up",
+            author = "AJR",
+            datePublished = LocalDate.of(2017, Month.JUNE, 9),
+            pages = 17,
+        ).copy(pagesRead = 8),
         Book(
             title = "Inertia",
             author = "AJR",
