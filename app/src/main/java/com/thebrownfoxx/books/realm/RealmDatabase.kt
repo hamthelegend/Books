@@ -21,15 +21,13 @@ class BookRealmDatabase {
         realm.query<RealmBook>("id == $0", id).first().asFlow().map { it.obj }
 
     fun getAllNonFavoriteBooks() =
-        realm.query<RealmBook>("favorite == $0 AND archived == $1", false, false)
-            .asFlow().map { it.list }
+        realm.query<RealmBook>("type == $0", BookType.NonFavorite.name).asFlow().map { it.list }
 
     fun getAllFavoriteBooks() =
-        realm.query<RealmBook>("favorite == $0 AND archived == $1", true, false)
-            .asFlow().map { it.list }
+        realm.query<RealmBook>("type == $0", BookType.Favorite.name).asFlow().map { it.list }
 
     fun getAllArchivedBooks() =
-        realm.query<RealmBook>("archived == $0", true).asFlow().map { it.list }
+        realm.query<RealmBook>("type == $0", BookType.Archived.name).asFlow().map { it.list }
 
     suspend fun addBook(
         title: String,
