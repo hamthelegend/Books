@@ -36,7 +36,10 @@ class BookViewModel(
         newPagesRead.mapToStateFlow(scope = viewModelScope) { it != null }
 
     fun updateNewPagesRead(newPagesRead: String) {
-        _newPagesRead.update { it.updated(newPagesRead) }
+        _newPagesRead.update { oldPagesRead ->
+            val newPagesReadInt = oldPagesRead.updated(newPagesRead)
+            if ((newPagesReadInt ?: 0) > (book.value?.pages ?: 0)) oldPagesRead else newPagesReadInt
+        }
     }
 
     fun savePagesRead() {

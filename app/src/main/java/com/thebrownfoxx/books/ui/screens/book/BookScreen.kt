@@ -1,6 +1,8 @@
 package com.thebrownfoxx.books.ui.screens.book
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.AnimationState
+import androidx.compose.animation.core.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.model.Sample
 import com.thebrownfoxx.books.ui.components.LabeledText
+import com.thebrownfoxx.books.ui.components.modifier.bringIntoViewOnFocus
 import com.thebrownfoxx.books.ui.extensions.formatted
 import com.thebrownfoxx.books.ui.theme.AppTheme
 import com.thebrownfoxx.components.ExpandedTopAppBar
@@ -124,7 +127,15 @@ fun BookScreen(
                         book = book,
                         newPagesRead = newPagesRead,
                         onNewPagesReadChange = onNewPagesReadChange,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .bringIntoViewOnFocus {
+                                val topAppBarState = scrollBehavior.state
+                                AnimationState(initialValue = topAppBarState.heightOffset).animateTo(
+                                    targetValue = topAppBarState.heightOffsetLimit,
+                                    animationSpec = scrollBehavior.snapAnimationSpec!!,
+                                ) { topAppBarState.heightOffset = value }
+                            },
                     )
                     AnimatedVisibility(visible = savePagesReadButtonVisible) {
                         FilledIconButton(
