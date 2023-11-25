@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.thebrownfoxx.books.ui.components.modifier.clicks
@@ -57,7 +58,7 @@ fun TextField(
             isError = isError,
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default
-                .copy(imeAction = ImeAction.Next)
+                .copy(imeAction = ImeAction.Next, capitalization = KeyboardCapitalization.Words)
                 .run {
                 if (numeric) copy(keyboardType = KeyboardType.Number)
                 else this
