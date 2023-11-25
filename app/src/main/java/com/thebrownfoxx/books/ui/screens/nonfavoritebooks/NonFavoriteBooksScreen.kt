@@ -13,8 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.model.Sample
-import com.thebrownfoxx.books.ui.components.DialogState
-import com.thebrownfoxx.books.ui.components.DialogStateChangeListener
 import com.thebrownfoxx.books.ui.components.domain.SwipeableBookCard
 import com.thebrownfoxx.books.ui.components.screen.SearchableLazyColumnScreen
 import com.thebrownfoxx.books.ui.components.screen.getListState
@@ -28,8 +26,7 @@ fun NonFavoriteBooksScreen(
     onSearchQueryChange: (String) -> Unit,
     onAddBook: () -> Unit,
     onOpenBook: (Book) -> Unit,
-    archiveDialogState: DialogState<Book>,
-    archiveDialogStateChangeListener: DialogStateChangeListener<Book>,
+    onArchive: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SearchableLazyColumnScreen(
@@ -55,18 +52,12 @@ fun NonFavoriteBooksScreen(
             SwipeableBookCard(
                 book = book,
                 onClick = { onOpenBook(book) },
-                onDismiss = { archiveDialogStateChangeListener.onInitiateAction(book) },
+                onDismiss = { onArchive(book); true },
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier.animateItemPlacement(),
             )
         }
     }
-
-    // TODO: Remove the dialog. Archiving shouldn't show a dialog.
-    ArchiveBookDialog(
-        state = archiveDialogState,
-        stateChangeListener = archiveDialogStateChangeListener,
-    )
 }
 
 @Preview
@@ -79,8 +70,7 @@ fun NonFavoriteBooksScreenPreview() {
             onSearchQueryChange = {},
             onAddBook = {},
             onOpenBook = {},
-            archiveDialogState = DialogState.Hidden(),
-            archiveDialogStateChangeListener = DialogStateChangeListener.empty(),
+            onArchive = {},
         )
     }
 }

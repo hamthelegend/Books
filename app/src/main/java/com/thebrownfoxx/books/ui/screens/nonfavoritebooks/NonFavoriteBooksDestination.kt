@@ -7,7 +7,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.thebrownfoxx.books.application
-import com.thebrownfoxx.books.ui.components.DialogStateChangeListener
 import com.thebrownfoxx.books.ui.screens.destinations.AddBookDestination
 import com.thebrownfoxx.books.ui.screens.destinations.NonFavoriteBookDestination
 import com.thebrownfoxx.books.ui.screens.navhost.BooksNavGraph
@@ -23,7 +22,6 @@ fun NonFavoriteBooks(navigator: DestinationsNavigator) {
     with(viewModel) {
         val books by books.collectAsStateWithLifecycle()
         val searchQuery by searchQuery.collectAsStateWithLifecycle()
-        val archiveDialogState by archiveDialogState.collectAsStateWithLifecycle()
         
         NonFavoriteBooksScreen(
             books = books,
@@ -31,12 +29,7 @@ fun NonFavoriteBooks(navigator: DestinationsNavigator) {
             onSearchQueryChange = ::updateSearchQuery,
             onAddBook = { navigator.navigate(AddBookDestination) },
             onOpenBook = { navigator.navigate(NonFavoriteBookDestination(bookId = it.id)) },
-            archiveDialogState = archiveDialogState,
-            archiveDialogStateChangeListener = DialogStateChangeListener(
-                onInitiateAction = ::initiateArchive,
-                onCancelAction = ::cancelArchive,
-                onCommitAction = ::archive,
-            ),
+            onArchive = ::archive,
         )
     }
 }
