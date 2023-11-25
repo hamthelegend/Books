@@ -131,6 +131,7 @@ fun AddBookScreen(
                     onValueChange = stateChangeListener.onPagesChange,
                     required = true,
                     error = if (state.showPagesRequired) "Required" else null,
+                    numeric = true,
                     modifier = Modifier
                         .weight(1f)
                         .fieldModifier(focusIndex = 3),
