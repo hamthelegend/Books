@@ -1,5 +1,7 @@
 package com.thebrownfoxx.books.ui.components.screen
 
+import androidx.compose.animation.core.AnimationState
+import androidx.compose.animation.core.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,7 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.thebrownfoxx.books.ui.components.modifier.bringIntoViewOnFocus
+import com.thebrownfoxx.books.ui.components.modifier.indicationlessClickable
 import com.thebrownfoxx.components.extension.Zero
 import com.thebrownfoxx.components.extension.plus
 
@@ -52,11 +59,13 @@ fun SearchableLazyColumnScreen(
     content: LazyListScope.() -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
     val lazyListState = rememberLazyListState()
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier
+            .indicationlessClickable { focusManager.clearFocus() }
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         floatingActionButton = floatingActionButton,
         bottomBar = bottomBar,
         contentWindowInsets = WindowInsets.Zero,
@@ -68,21 +77,33 @@ fun SearchableLazyColumnScreen(
                 background = background,
                 scrollBehavior = scrollBehavior,
                 content = topBarExpandedContent,
+                modifier = Modifier.bringIntoViewOnFocus {
+                    val topAppBarState = scrollBehavior.state
+                    AnimationState(initialValue = topAppBarState.heightOffset).animateTo(
+                        targetValue = topAppBarState.heightOffsetLimit,
+                        animationSpec = scrollBehavior.snapAnimationSpec!!,
+                    ) { topAppBarState.heightOffset = value }
+                }
             )
         },
     ) { scaffoldContentPadding ->
+        val indicatorModifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(scaffoldContentPadding)
+
         when (listState) {
             ListState.Loading -> LoadingIndicator(
-                modifier = Modifier.padding(scaffoldContentPadding),
+                modifier = indicatorModifier,
             )
 
             is ListState.Empty -> EmptyList(
                 text = listState.text,
-                modifier = Modifier.padding(scaffoldContentPadding),
+                modifier = indicatorModifier,
             )
 
             ListState.NoSearchResults -> NoSearchResults(
-                modifier = Modifier.padding(scaffoldContentPadding),
+                modifier = indicatorModifier,
             )
 
             ListState.Loaded -> LazyColumn(

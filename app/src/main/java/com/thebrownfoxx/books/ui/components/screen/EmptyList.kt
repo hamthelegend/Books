@@ -2,7 +2,6 @@ package com.thebrownfoxx.books.ui.components.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Inbox
@@ -25,7 +24,7 @@ fun EmptyList(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
     ) {
         Icon(
             imageVector = Icons.TwoTone.Inbox,

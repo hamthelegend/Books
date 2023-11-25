@@ -1,7 +1,6 @@
 package com.thebrownfoxx.books.ui.components.screen
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +12,7 @@ import com.thebrownfoxx.books.ui.theme.AppTheme
 fun LoadingIndicator(
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,7 @@ import com.thebrownfoxx.books.ui.theme.AppTheme
 import com.thebrownfoxx.components.ExpandedTopAppBar
 import com.thebrownfoxx.components.FilledButton
 import com.thebrownfoxx.components.IconButton
+import com.thebrownfoxx.components.extension.Zero
 import com.thebrownfoxx.components.extension.plus
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,6 +85,7 @@ fun EditBookScreen(
                 Text(text = title)
             }
         },
+        contentWindowInsets = WindowInsets.Zero,
     ) { contentPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
