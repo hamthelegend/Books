@@ -10,10 +10,9 @@ data class Book(
     val datePublished: LocalDate,
     val dateAdded: LocalDate,
     val dateModified: LocalDate?,
-    val favorite: Boolean,
     val pages: Int,
     val pagesRead: Int,
-    val archived: Boolean,
+    val type: BookType,
 ) {
     val readingProgress = pagesRead.toFloat() / pages
 }
@@ -30,8 +29,7 @@ fun Book(
     datePublished = datePublished,
     dateAdded = LocalDate.now(),
     dateModified = null,
-    favorite = false,
     pages = pages,
     pagesRead = 0,
-    archived = false,
+    type = BookType.NonFavorite,
 )

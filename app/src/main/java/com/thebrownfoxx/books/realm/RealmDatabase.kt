@@ -1,5 +1,6 @@
 package com.thebrownfoxx.books.realm
 
+import com.thebrownfoxx.books.model.BookType
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -12,7 +13,7 @@ import java.time.LocalDate
 class BookRealmDatabase {
     private val config = RealmConfiguration
         .Builder(schema = setOf(RealmBook::class))
-        .schemaVersion(1)
+        .schemaVersion(2)
         .build()
     private val realm = Realm.open(config)
 
@@ -45,15 +46,6 @@ class BookRealmDatabase {
                 book.dateAddedEpochDay = LocalDate.now().toEpochDay()
                 book.pages = pages
                 copyToRealm(book)
-            }
-        }
-    }
-
-    suspend fun favoriteBook(id: ObjectId) {
-        withContext(Dispatchers.IO) {
-            realm.write {
-                val book = realm.query<RealmBook>("id == $0", id).first().find()
-                if (book != null) { findLatest(book)?.favorite = true }
             }
         }
     }
@@ -97,12 +89,30 @@ class BookRealmDatabase {
         }
     }
 
+    suspend fun favoriteBook(id: ObjectId) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val book = realm.query<RealmBook>("id == $0", id).first().find()
+                if (book != null) { findLatest(book)?.type = BookType.Favorite.name }
+            }
+        }
+    }
+
+    suspend fun unfavoriteBook(id: ObjectId) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val book = realm.query<RealmBook>("id == $0", id).first().find()
+                if (book != null) { findLatest(book)?.type = BookType.NonFavorite.name }
+            }
+        }
+    }
+
     suspend fun archiveBook(id: ObjectId) {
         withContext(Dispatchers.IO) {
             realm.write {
                 val book = realm.query<RealmBook>("id == $0", id).first().find()
                 if (book != null) {
-                    findLatest(book)?.archived = true
+                    findLatest(book)?.type = BookType.Archived.name
                 }
             }
         }
@@ -113,7 +123,7 @@ class BookRealmDatabase {
             realm.write {
                 val book = realm.query<RealmBook>("id == $0", id).first().find()
                 if (book != null) {
-                    findLatest(book)?.archived = false
+                    findLatest(book)?.type = BookType.NonFavorite.name
                 }
             }
         }
