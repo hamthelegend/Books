@@ -33,7 +33,7 @@ fun ArchivedBooksScreen(
         searchQuery = searchQuery,
         onSearchQueryChange = onSearchQueryChange,
         listState = books.getListState(
-            emptyText = "No books added",
+            emptyText = "No archived books",
             searching = searchQuery != "",
         ),
         contentPadding = PaddingValues(vertical = 16.dp),
