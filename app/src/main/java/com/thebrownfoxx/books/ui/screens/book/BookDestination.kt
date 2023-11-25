@@ -24,6 +24,7 @@ fun BookDestination(navigator: DestinationsNavigator) {
         val book by book.collectAsStateWithLifecycle()
         val newPagesRead by newPagesRead.collectAsStateWithLifecycle()
         val savePagesReadButtonVisible by savePagesReadButtonVisible.collectAsStateWithLifecycle()
+        val deleteDialogVisible by deleteDialogVisible.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             navigateUp.collect { navigator.navigateUp() }
@@ -39,6 +40,8 @@ fun BookDestination(navigator: DestinationsNavigator) {
             onUnfavorite = ::unfavorite,
             onArchive = ::archive,
             onUnarchive = ::unarchive,
+            deleteDialogVisible = deleteDialogVisible,
+            onDeleteDialogVisibleChange = ::updateDeleteDialogVisible,
             onDelete = ::delete,
             onNavigateUp = { navigator.navigateUp() },
         )

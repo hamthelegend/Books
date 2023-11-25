@@ -36,6 +36,9 @@ class BookViewModel(
     val savePagesReadButtonVisible =
         newPagesRead.mapToStateFlow(scope = viewModelScope) { it != null }
 
+    private val _deleteDialogVisible = MutableStateFlow(false)
+    val deleteDialogVisible = _deleteDialogVisible.asStateFlow()
+
     fun updateNewPagesRead(newPagesRead: String) {
         _newPagesRead.update { oldPagesRead ->
             val newPagesReadInt = oldPagesRead.updated(newPagesRead)
@@ -84,6 +87,10 @@ class BookViewModel(
                 database.unarchiveBook(org.mongodb.kbson.ObjectId(bookId))
             }
         }
+    }
+
+    fun updateDeleteDialogVisible(deleteDialogVisible: Boolean) {
+        _deleteDialogVisible.update { deleteDialogVisible }
     }
 
     fun delete() {

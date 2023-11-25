@@ -63,6 +63,8 @@ fun BookScreen(
     onUnfavorite: () -> Unit,
     onArchive: () -> Unit,
     onUnarchive: () -> Unit,
+    deleteDialogVisible: Boolean,
+    onDeleteDialogVisibleChange: (Boolean) -> Unit,
     onDelete: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -133,7 +135,7 @@ fun BookScreen(
                                     IconButton(
                                         imageVector = Icons.TwoTone.DeleteForever,
                                         contentDescription = null,
-                                        onClick = onDelete,
+                                        onClick = { onDeleteDialogVisibleChange(true) },
                                     )
                                 }
                             }
@@ -204,6 +206,13 @@ fun BookScreen(
             }
         }
     }
+
+    DeleteBookDialog(
+        book = book,
+        visible = deleteDialogVisible,
+        onDismiss = { onDeleteDialogVisibleChange(false) },
+        onConfirm = onDelete,
+        )
 }
 
 @Preview
@@ -220,6 +229,8 @@ fun BookScreenPreview() {
             onUnfavorite = {},
             onArchive = {},
             onUnarchive = {},
+            deleteDialogVisible = false,
+            onDeleteDialogVisibleChange = {},
             onDelete = {},
             onNavigateUp = {},
         )
