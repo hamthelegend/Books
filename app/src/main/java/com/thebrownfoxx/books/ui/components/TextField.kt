@@ -36,6 +36,11 @@ fun TextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
+    val clicks = interactionSource.clicks
+    LaunchedEffect(Unit) {
+        clicks.collect { onClick() }
+    }
+
     Column(modifier = modifier) {
         TextField(
             value = value,
@@ -69,10 +74,5 @@ fun TextField(
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp),
             )
         }
-    }
-
-    val clicks = interactionSource.clicks
-    LaunchedEffect(Unit) {
-        clicks.collect { onClick() }
     }
 }

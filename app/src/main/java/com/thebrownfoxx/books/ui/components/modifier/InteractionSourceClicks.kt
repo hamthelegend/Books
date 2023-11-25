@@ -20,7 +20,7 @@ val InteractionSource.clicks: Flow<Unit>
         LaunchedEffect(this) {
             interactions.collect { interaction ->
                 when (interaction) {
-                    is  PressInteraction.Press -> timePressed = System.currentTimeMillis()
+                    is PressInteraction.Press -> timePressed = System.currentTimeMillis()
                     is PressInteraction.Release -> {
                         val currentTimePressed = timePressed
                         if (currentTimePressed != null) {
@@ -32,6 +32,7 @@ val InteractionSource.clicks: Flow<Unit>
                         }
                         timePressed = null
                     }
+
                     is DragInteraction.Cancel -> timePressed = null
                 }
             }
