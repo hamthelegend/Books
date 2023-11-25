@@ -3,6 +3,7 @@ package com.thebrownfoxx.books.ui.screens.addbook
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thebrownfoxx.books.realm.BookRealmDatabase
+import com.thebrownfoxx.books.ui.extensions.updated
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -43,11 +44,10 @@ class AddBookViewModel(private val database: BookRealmDatabase) : ViewModel() {
     fun updatePages(pages: String) {
         _state.update {
             val previousPages = it.pages
-            val newPages = when (pages) {
-                "" -> null
-                else -> pages.toIntOrNull() ?: previousPages
-            }
-            it.copy(pages = newPages, showPagesRequired = false)
+            it.copy(
+                pages = previousPages.updated(pages),
+                showPagesRequired = false,
+            )
         }
     }
 
