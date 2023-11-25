@@ -1,6 +1,5 @@
 package com.thebrownfoxx.books.ui.screens.archivedbooks
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +54,7 @@ fun ArchivedBooksScreen(
         ),
         contentPadding = PaddingValues(vertical = 16.dp),
         floatingActionButton = {
-            AnimatedVisibility(visible = !books.isNullOrEmpty()) {
+            if (!books.isNullOrEmpty()) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
