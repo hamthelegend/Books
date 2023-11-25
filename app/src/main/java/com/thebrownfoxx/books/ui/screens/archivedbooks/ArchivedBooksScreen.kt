@@ -29,7 +29,7 @@ fun ArchivedBooksScreen(
 ) {
     SearchableLazyColumnScreen(
         modifier = modifier,
-        title = "Books",
+        title = "Archive",
         searchQuery = searchQuery,
         onSearchQueryChange = onSearchQueryChange,
         listState = books.getListState(

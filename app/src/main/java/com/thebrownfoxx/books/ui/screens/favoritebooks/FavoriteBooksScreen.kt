@@ -25,7 +25,7 @@ fun FavoriteBooksScreen(
 ) {
     SearchableLazyColumnScreen(
         modifier = modifier,
-        title = "Books",
+        title = "Favorites",
         searchQuery = searchQuery,
         onSearchQueryChange = onSearchQueryChange,
         listState = books.getListState(
