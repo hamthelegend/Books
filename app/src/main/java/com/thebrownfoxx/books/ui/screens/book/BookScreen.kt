@@ -43,6 +43,7 @@ import com.thebrownfoxx.books.ui.components.LabeledText
 import com.thebrownfoxx.books.ui.components.modifier.bringIntoViewOnFocus
 import com.thebrownfoxx.books.ui.components.modifier.indicationlessClickable
 import com.thebrownfoxx.books.ui.extensions.formatted
+import com.thebrownfoxx.books.ui.extensions.toIntPercent
 import com.thebrownfoxx.books.ui.theme.AppTheme
 import com.thebrownfoxx.components.ExpandedTopAppBar
 import com.thebrownfoxx.components.FilledIconButton
@@ -171,7 +172,7 @@ fun BookScreen(
             }
             Column {
                 Text(
-                    text = "Pages read".uppercase(),
+                    text = "Pages read (${book.readingProgress.toIntPercent()}%)".uppercase(),
                     style = typography.labelSmall,
                 )
                 VerticalSpacer(height = 8.dp)

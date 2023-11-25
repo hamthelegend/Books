@@ -32,8 +32,13 @@ class ArchivedBooksViewModel(private val database: BookRealmDatabase) : ViewMode
     private val _deleteDialogState =
         MutableStateFlow<DialogState<Book>>(DialogState.Hidden())
     val deleteDialogState = _deleteDialogState.asStateFlow()
-
-
+    
+    private val _unarchiveAllDialogVisible = MutableStateFlow(false)
+    val unarchiveAllDialogVisible = _unarchiveAllDialogVisible.asStateFlow()
+    
+    private val _deleteAllDialogVisible = MutableStateFlow(false)
+    val deleteAllDialogVisible = _deleteAllDialogVisible.asStateFlow()
+    
     fun updateSearchQuery(query: String) {
         _searchQuery.update { query }
     }
@@ -65,5 +70,27 @@ class ArchivedBooksViewModel(private val database: BookRealmDatabase) : ViewMode
             }
         }
         _deleteDialogState.update { DialogState.Confirmed() }
+    }
+    
+    fun updateUnarchiveAllDialogVisible(unarchiveDialogVisible: Boolean) {
+        _unarchiveAllDialogVisible.update { unarchiveDialogVisible }
+    }
+
+    fun unarchiveAll() {
+        viewModelScope.launch {
+            database.unarchiveAll()
+            _unarchiveAllDialogVisible.update { false }
+        }
+    }
+
+    fun updateDeleteAllDialogVisible(deleteDialogVisible: Boolean) {
+        _deleteAllDialogVisible.update { deleteDialogVisible }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch {
+            database.deleteAllArchived()
+            _deleteAllDialogVisible.update { false }
+        }
     }
 }

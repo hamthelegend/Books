@@ -131,7 +131,29 @@ class BookRealmDatabase {
         withContext(Dispatchers.IO) {
             realm.write {
                 val book = query<RealmBook>("id == $0", id).first().find()
-                if (book != null) delete(book)
+                if (book != null) delete(findLatest(book)!!)
+            }
+        }
+    }
+
+    suspend fun unarchiveAll() {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val books = realm.query<RealmBook>("type == $0", BookType.Archived.name).find()
+                for (book in books) {
+                    findLatest(book)?.type = BookType.NonFavorite.name
+                }
+            }
+        }
+    }
+
+    suspend fun deleteAllArchived() {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val books = realm.query<RealmBook>("type == $0", BookType.Archived.name).find()
+                for (book in books) {
+                    delete(findLatest(book)!!)
+                }
             }
         }
     }

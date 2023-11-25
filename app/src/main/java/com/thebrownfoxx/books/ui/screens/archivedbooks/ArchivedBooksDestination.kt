@@ -23,6 +23,8 @@ fun ArchivedBooks(navigator: DestinationsNavigator) {
         val books by books.collectAsStateWithLifecycle()
         val searchQuery by searchQuery.collectAsStateWithLifecycle()
         val archiveDialogState by deleteDialogState.collectAsStateWithLifecycle()
+        val unarchiveAllDialogVisible by unarchiveAllDialogVisible.collectAsStateWithLifecycle()
+        val deleteAllDialogVisible by deleteAllDialogVisible.collectAsStateWithLifecycle()
         
         ArchivedBooksScreen(
             books = books,
@@ -35,6 +37,12 @@ fun ArchivedBooks(navigator: DestinationsNavigator) {
                 onCancelAction = ::cancelDelete,
                 onCommitAction = ::delete,
             ),
+            unarchiveAllDialogVisible = unarchiveAllDialogVisible,
+            onUnarchiveAllDialogVisibleChange = ::updateUnarchiveAllDialogVisible,
+            onUnarchiveAll = ::unarchiveAll,
+            deleteAllDialogVisible = deleteAllDialogVisible,
+            onDeleteAllDialogVisibleChange = ::updateDeleteAllDialogVisible,
+            onDeleteAll = ::deleteAll,
         )
     }
 }
