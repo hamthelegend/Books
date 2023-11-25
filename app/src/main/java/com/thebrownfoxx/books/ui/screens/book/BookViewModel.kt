@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamthelegend.enchantmentorder.extensions.mapToStateFlow
+import com.thebrownfoxx.books.model.BookType
 import com.thebrownfoxx.books.realm.BookRealmDatabase
 import com.thebrownfoxx.books.ui.extensions.updated
 import com.thebrownfoxx.books.ui.screens.navArgs
@@ -52,10 +53,45 @@ class BookViewModel(
         }
     }
 
+    fun favorite() {
+        viewModelScope.launch {
+            if (book.value?.type == BookType.NonFavorite) {
+                database.favoriteBook(org.mongodb.kbson.ObjectId(bookId))
+            }
+        }
+    }
+
+    fun unfavorite() {
+        viewModelScope.launch {
+            if (book.value?.type == BookType.Favorite) {
+                database.unfavoriteBook(org.mongodb.kbson.ObjectId(bookId))
+            }
+        }
+    }
+
     fun archive() {
         viewModelScope.launch {
-            database.archiveBook(org.mongodb.kbson.ObjectId(bookId))
-            _navigateUp.emit(Unit)
+            if (book.value?.type == BookType.NonFavorite) {
+                database.archiveBook(org.mongodb.kbson.ObjectId(bookId))
+                _navigateUp.emit(Unit)
+            }
+        }
+    }
+
+    fun unarchive() {
+        viewModelScope.launch {
+            if (book.value?.type == BookType.Archived) {
+                database.unarchiveBook(org.mongodb.kbson.ObjectId(bookId))
+            }
+        }
+    }
+
+    fun delete() {
+        viewModelScope.launch {
+            if (book.value?.type == BookType.Archived) {
+                database.deleteBook(org.mongodb.kbson.ObjectId(bookId))
+                _navigateUp.emit(Unit)
+            }
         }
     }
 }

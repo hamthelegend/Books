@@ -38,7 +38,11 @@ fun Book(navigator: DestinationsNavigator) {
             onNewPagesReadChange = ::updateNewPagesRead,
             savePagesReadButtonVisible = savePagesReadButtonVisible,
             onSavePagesRead = ::savePagesRead,
+            onFavorite = ::favorite,
+            onUnfavorite = ::unfavorite,
             onArchive = ::archive,
+            onUnarchive = ::unarchive,
+            onDelete = ::delete,
             onNavigateUp = { navigator.navigateUp() },
         )
     }

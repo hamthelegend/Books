@@ -1,5 +1,6 @@
 package com.thebrownfoxx.books.ui.screens.book
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.animateTo
@@ -16,7 +17,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Archive
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
+import androidx.compose.material.icons.twotone.DeleteForever
+import androidx.compose.material.icons.twotone.Star
+import androidx.compose.material.icons.twotone.StarBorder
+import androidx.compose.material.icons.twotone.Unarchive
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thebrownfoxx.books.model.Book
+import com.thebrownfoxx.books.model.BookType
 import com.thebrownfoxx.books.model.Sample
 import com.thebrownfoxx.books.ui.components.LabeledText
 import com.thebrownfoxx.books.ui.components.modifier.bringIntoViewOnFocus
@@ -48,7 +56,11 @@ fun BookScreen(
     onNewPagesReadChange: (String) -> Unit,
     savePagesReadButtonVisible: Boolean,
     onSavePagesRead: () -> Unit,
+    onFavorite: () -> Unit,
+    onUnfavorite: () -> Unit,
     onArchive: () -> Unit,
+    onUnarchive: () -> Unit,
+    onDelete: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -79,11 +91,48 @@ fun BookScreen(
                     }
                 },
                 actions = {
-                    IconButton(
-                        imageVector = Icons.TwoTone.Archive,
-                        contentDescription = null,
-                        onClick = onArchive,
-                    )
+                    AnimatedContent(
+                        targetState = book.type,
+                        label = "",
+                    ) { bookType ->
+                        Row(/*horizontalArrangement = Arrangement.spacedBy(16.dp)*/) {
+                            when (bookType) {
+                                BookType.NonFavorite -> {
+                                    IconButton(
+                                        imageVector = Icons.TwoTone.Archive,
+                                        contentDescription = null,
+                                        onClick = onArchive,
+                                    )
+                                    IconButton(
+                                        imageVector = Icons.TwoTone.StarBorder,
+                                        contentDescription = null,
+                                        onClick = onFavorite,
+                                    )
+                                }
+                                BookType.Favorite -> {
+                                    IconButton(
+                                        imageVector = Icons.TwoTone.Star,
+                                        contentDescription = null,
+                                        onClick = onUnfavorite,
+                                        colors = IconButtonDefaults
+                                            .iconButtonColors(contentColor = colorScheme.primary),
+                                    )
+                                }
+                                BookType.Archived -> {
+                                    IconButton(
+                                        imageVector = Icons.TwoTone.Unarchive,
+                                        contentDescription = null,
+                                        onClick = onUnarchive,
+                                    )
+                                    IconButton(
+                                        imageVector = Icons.TwoTone.DeleteForever,
+                                        contentDescription = null,
+                                        onClick = onDelete,
+                                    )
+                                }
+                            }
+                        }
+                    }
                 },
             ) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -161,7 +210,11 @@ fun BookScreenPreview() {
             savePagesReadButtonVisible = true,
             onNewPagesReadChange = {},
             onSavePagesRead = {},
+            onFavorite = {},
+            onUnfavorite = {},
             onArchive = {},
+            onUnarchive = {},
+            onDelete = {},
             onNavigateUp = {},
         )
     }
