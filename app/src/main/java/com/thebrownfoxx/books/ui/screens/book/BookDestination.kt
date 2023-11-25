@@ -6,13 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.thebrownfoxx.books.application
+import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.model.Sample
 
 
 @Composable
-fun BookDestination(navigator: DestinationsNavigator) {
+fun BookDestination(onNavigateUp: () -> Unit, onEdit: (Book) -> Unit) {
     val viewModel = viewModel {
         BookViewModel(
             database = application.database,
@@ -27,7 +27,7 @@ fun BookDestination(navigator: DestinationsNavigator) {
         val deleteDialogVisible by deleteDialogVisible.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            navigateUp.collect { navigator.navigateUp() }
+            navigateUp.collect { onNavigateUp() }
         }
 
         BookScreen(
@@ -36,6 +36,7 @@ fun BookDestination(navigator: DestinationsNavigator) {
             onNewPagesReadChange = ::updateNewPagesRead,
             savePagesReadButtonVisible = savePagesReadButtonVisible,
             onSavePagesRead = ::savePagesRead,
+            onEdit = { book?.let(onEdit) },
             onFavorite = ::favorite,
             onUnfavorite = ::unfavorite,
             onArchive = ::archive,
@@ -43,7 +44,7 @@ fun BookDestination(navigator: DestinationsNavigator) {
             deleteDialogVisible = deleteDialogVisible,
             onDeleteDialogVisibleChange = ::updateDeleteDialogVisible,
             onDelete = ::delete,
-            onNavigateUp = { navigator.navigateUp() },
+            onNavigateUp = onNavigateUp,
         )
     }
 }

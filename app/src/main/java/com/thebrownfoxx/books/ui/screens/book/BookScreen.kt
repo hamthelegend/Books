@@ -18,6 +18,7 @@ import androidx.compose.material.icons.twotone.Archive
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.DeleteForever
+import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.material.icons.twotone.StarBorder
 import androidx.compose.material.icons.twotone.Unarchive
@@ -59,6 +60,7 @@ fun BookScreen(
     onNewPagesReadChange: (String) -> Unit,
     savePagesReadButtonVisible: Boolean,
     onSavePagesRead: () -> Unit,
+    onEdit: () -> Unit,
     onFavorite: () -> Unit,
     onUnfavorite: () -> Unit,
     onArchive: () -> Unit,
@@ -103,7 +105,14 @@ fun BookScreen(
                         targetState = book.type,
                         label = "",
                     ) { bookType ->
-                        Row(/*horizontalArrangement = Arrangement.spacedBy(16.dp)*/) {
+                        Row{
+                            if (bookType != BookType.Archived) {
+                                IconButton(
+                                    imageVector = Icons.TwoTone.Edit,
+                                    contentDescription = null,
+                                    onClick = onEdit,
+                                )
+                            }
                             when (bookType) {
                                 BookType.NonFavorite -> {
                                     IconButton(
@@ -226,6 +235,7 @@ fun BookScreenPreview() {
             savePagesReadButtonVisible = true,
             onNewPagesReadChange = {},
             onSavePagesRead = {},
+            onEdit = {},
             onFavorite = {},
             onUnfavorite = {},
             onArchive = {},
