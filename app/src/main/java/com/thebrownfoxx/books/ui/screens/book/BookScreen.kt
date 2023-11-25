@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import com.thebrownfoxx.books.model.BookType
 import com.thebrownfoxx.books.model.Sample
 import com.thebrownfoxx.books.ui.components.LabeledText
 import com.thebrownfoxx.books.ui.components.modifier.bringIntoViewOnFocus
+import com.thebrownfoxx.books.ui.components.modifier.indicationlessClickable
 import com.thebrownfoxx.books.ui.extensions.formatted
 import com.thebrownfoxx.books.ui.theme.AppTheme
 import com.thebrownfoxx.components.ExpandedTopAppBar
@@ -65,9 +67,12 @@ fun BookScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier
+            .indicationlessClickable { focusManager.clearFocus() }
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             ExpandedTopAppBar(
                 scrollBehavior = scrollBehavior,
