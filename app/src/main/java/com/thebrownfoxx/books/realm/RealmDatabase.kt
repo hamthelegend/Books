@@ -64,7 +64,12 @@ class BookRealmDatabase {
                     if (author != null) latestBook?.author = author
                     if (datePublished != null)
                         latestBook?.datePublishedEpochDay = datePublished.toEpochDay()
-                    if (pages != null) latestBook?.pages = pages
+                    if (pages != null) {
+                        latestBook?.pages = pages
+                        if ((latestBook?.pagesRead ?: 0) > pages) {
+                            latestBook?.pagesRead = pages
+                        }
+                    }
 
                     val hasEdits = listOf(author, title, datePublished, pages).any { it != null }
                     if (hasEdits) latestBook?.dateModifiedEpochDay = LocalDate.now().toEpochDay()
