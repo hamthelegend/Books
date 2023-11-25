@@ -25,6 +25,8 @@ fun Book(navigator: DestinationsNavigator) {
 
     with(viewModel) {
         val book by book.collectAsStateWithLifecycle()
+        val newPagesRead by newPagesRead.collectAsStateWithLifecycle()
+        val savePagesReadButtonVisible by savePagesReadButtonVisible.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             navigateUp.collect { navigator.navigateUp() }
@@ -32,6 +34,10 @@ fun Book(navigator: DestinationsNavigator) {
 
         BookScreen(
             book = book ?: Sample.Book,
+            newPagesRead = newPagesRead,
+            onNewPagesReadChange = ::updateNewPagesRead,
+            savePagesReadButtonVisible = savePagesReadButtonVisible,
+            onSavePagesRead = ::savePagesRead,
             onArchive = ::archive,
             onNavigateUp = { navigator.navigateUp() },
         )
