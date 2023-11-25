@@ -1,5 +1,6 @@
 package com.thebrownfoxx.books.ui.screens.book
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -47,25 +48,15 @@ fun ProgressBar(
     book: Book,
     newPagesRead: Int?,
     onNewPagesReadChange: (String) -> Unit,
+    editable: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val focusRequester = remember { FocusRequester() }
-
     val progressColor = colorScheme.primaryContainer
     val progress by animateFloatAsState(book.readingProgress, label = "")
 
-    var textFieldInFocus by rememberMutableStateOf(false)
-    val textFieldOutlineColor by animateColorAsState(
-        targetValue = if (textFieldInFocus) colorScheme.primary else colorScheme.outline,
-        label = "",
-    )
-    val textFieldOutlineWidth by animateDpAsState(
-        targetValue = if (textFieldInFocus) 2.dp else 1.dp,
-        label = "",
-    )
-    val placeholderAlpha by animateFloatAsState(
-        targetValue = if (textFieldInFocus) 0.6f else 1f,
-        label = "",
+    val spacer by animateDpAsState(
+        targetValue = if (editable) 16.dp else 8.dp,
+        label = ""
     )
 
     Card(modifier) {
@@ -82,45 +73,83 @@ fun ProgressBar(
                 }
                 .padding(16.dp)
         ) {
-            // TODO: Change outline on focus
-            OutlinedCard(
-                border = BorderStroke(width = textFieldOutlineWidth, color = textFieldOutlineColor),
-                shape = OutlinedTextFieldDefaults.shape,
-                colors = CardDefaults.outlinedCardColors(
-                    containerColor = Color.Transparent,
-                    contentColor = colorScheme.onPrimaryContainer,
-                ),
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .indicationlessClickable { focusRequester.requestFocus() }
-                        .padding(vertical = 16.dp, horizontal = 24.dp)
-                        .animateContentSize()
-                        .onFocusChanged { textFieldInFocus = it.isFocused },
-                ) {
-                    if (newPagesRead == null) {
-                        Text(
-                            text = book.pagesRead.toString(),
-                            color = colorScheme.onSurfaceVariant.copy(alpha = placeholderAlpha),
-                        )
-                    }
-                    BasicTextField(
-                        value = newPagesRead?.toString() ?: "",
-                        onValueChange = onNewPagesReadChange,
-                        textStyle = LocalTextStyle.current,
-                        keyboardOptions = KeyboardOptions.Default
-                            .copy(keyboardType = KeyboardType.Number),
-                        modifier = Modifier
-                            .focusRequester(focusRequester)
-                            .width(IntrinsicSize.Min),
+            // TODO: Fix animation
+            AnimatedContent(
+                targetState = editable,
+                label = "",
+            ) { editable ->
+                if (editable) {
+                    ReadPagesTextField(
+                        newPagesRead = newPagesRead,
+                        book = book,
+                        onNewPagesReadChange = onNewPagesReadChange
                     )
+                } else {
+                    Text(text = book.pagesRead.toString())
                 }
             }
-            HorizontalSpacer(width = 16.dp)
+            HorizontalSpacer(width = spacer)
             Text(text = "/")
             HorizontalSpacer(width = 8.dp)
             Text(text = book.pages.toString())
+        }
+    }
+}
+
+@Composable
+private fun ReadPagesTextField(
+    newPagesRead: Int?,
+    book: Book,
+    onNewPagesReadChange: (String) -> Unit,
+) {
+    val focusRequester = remember { FocusRequester() }
+
+    var textFieldInFocus by rememberMutableStateOf(false)
+    val textFieldOutlineColor by animateColorAsState(
+        targetValue = if (textFieldInFocus) colorScheme.primary else colorScheme.outline,
+        label = "",
+    )
+    val textFieldOutlineWidth by animateDpAsState(
+        targetValue = if (textFieldInFocus) 2.dp else 1.dp,
+        label = "",
+    )
+    val placeholderAlpha by animateFloatAsState(
+        targetValue = if (textFieldInFocus) 0.6f else 1f,
+        label = "",
+    )
+
+    OutlinedCard(
+        border = BorderStroke(width = textFieldOutlineWidth, color = textFieldOutlineColor),
+        shape = OutlinedTextFieldDefaults.shape,
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = Color.Transparent,
+            contentColor = colorScheme.onPrimaryContainer,
+        ),
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .indicationlessClickable { focusRequester.requestFocus() }
+                .padding(vertical = 16.dp, horizontal = 24.dp)
+                .animateContentSize()
+                .onFocusChanged { textFieldInFocus = it.isFocused },
+        ) {
+            if (newPagesRead == null) {
+                Text(
+                    text = book.pagesRead.toString(),
+                    color = colorScheme.onSurfaceVariant.copy(alpha = placeholderAlpha),
+                )
+            }
+            BasicTextField(
+                value = newPagesRead?.toString() ?: "",
+                onValueChange = onNewPagesReadChange,
+                textStyle = LocalTextStyle.current,
+                keyboardOptions = KeyboardOptions.Default
+                    .copy(keyboardType = KeyboardType.Number),
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .width(IntrinsicSize.Min),
+            )
         }
     }
 }
@@ -133,6 +162,7 @@ fun ProgressBarPreview() {
             book = Sample.Book,
             newPagesRead = 8,
             onNewPagesReadChange = {},
+            editable = true,
             modifier = Modifier.padding(16.dp),
         )
     }

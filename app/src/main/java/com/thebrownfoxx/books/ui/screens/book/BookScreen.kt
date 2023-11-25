@@ -184,6 +184,7 @@ fun BookScreen(
                         book = book,
                         newPagesRead = newPagesRead,
                         onNewPagesReadChange = onNewPagesReadChange,
+                        editable = book.type != BookType.Archived,
                         modifier = Modifier
                             .weight(1f)
                             .bringIntoViewOnFocus {
