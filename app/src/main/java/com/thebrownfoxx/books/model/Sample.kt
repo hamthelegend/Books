@@ -5,7 +5,7 @@ import java.time.Month
 
 object Sample {
     val Book = Book(
-        title = "Life is not a bed of roses!!!!!!",
+        title = "Life is not a bed of roses",
         author = "Herb Ertlinger",
         datePublished = LocalDate.of(2023, Month.APRIL, 19),
         pages = 17,
