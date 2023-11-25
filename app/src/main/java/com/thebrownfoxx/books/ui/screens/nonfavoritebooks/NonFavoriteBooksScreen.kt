@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +41,10 @@ fun NonFavoriteBooksScreen(
         ),
         contentPadding = PaddingValues(vertical = 16.dp),
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddBook) {
+            FloatingActionButton(
+                onClick = onAddBook,
+                containerColor = colorScheme.tertiaryContainer,
+            ) {
                 Icon(imageVector = Icons.TwoTone.Add, contentDescription = null)
             }
         }

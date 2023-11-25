@@ -1,5 +1,6 @@
 package com.thebrownfoxx.books.ui.screens.archivedbooks
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,7 @@ import androidx.compose.material.icons.twotone.DeleteSweep
 import androidx.compose.material.icons.twotone.SettingsBackupRestore
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,24 +55,29 @@ fun ArchivedBooksScreen(
         ),
         contentPadding = PaddingValues(vertical = 16.dp),
         floatingActionButton = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                SmallFloatingActionButton(
-                    onClick = { onDeleteAllDialogVisibleChange(true) },
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
+            AnimatedVisibility(visible = !books.isNullOrEmpty()) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Icon(
-                        imageVector = Icons.TwoTone.DeleteSweep,
-                        contentDescription = null,
-                    )
-                }
-                FloatingActionButton(onClick = { onUnarchiveAllDialogVisibleChange(true) }) {
-                    Icon(
-                        imageVector = Icons.TwoTone.SettingsBackupRestore,
-                        contentDescription = null,
-                    )
+                    SmallFloatingActionButton(
+                        onClick = { onDeleteAllDialogVisibleChange(true) },
+                        containerColor = colorScheme.errorContainer,
+                    ) {
+                        Icon(
+                            imageVector = Icons.TwoTone.DeleteSweep,
+                            contentDescription = null,
+                        )
+                    }
+                    FloatingActionButton(
+                        onClick = { onUnarchiveAllDialogVisibleChange(true) },
+                        containerColor = colorScheme.tertiaryContainer,
+                    ) {
+                        Icon(
+                            imageVector = Icons.TwoTone.SettingsBackupRestore,
+                            contentDescription = null,
+                        )
+                    }
                 }
             }
         },
