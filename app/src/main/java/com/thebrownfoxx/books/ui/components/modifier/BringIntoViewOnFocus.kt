@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusChanged
 import kotlinx.coroutines.launch
 
@@ -26,5 +25,4 @@ fun Modifier.bringIntoViewOnFocus(onFocus: suspend () -> Unit = {}) = composed {
                 }
             }
         }
-        .focusTarget()
 }
