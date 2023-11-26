@@ -1,7 +1,13 @@
 package com.thebrownfoxx.books.ui.components.screen
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.animateTo
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,10 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.thebrownfoxx.books.ui.components.modifier.bringIntoViewOnFocus
 import com.thebrownfoxx.books.ui.components.modifier.indicationlessClickable
+import com.thebrownfoxx.components.animation.sharedYAxisEnter
 import com.thebrownfoxx.components.extension.Zero
 import com.thebrownfoxx.components.extension.plus
 
@@ -91,28 +99,46 @@ fun SearchableLazyColumnScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(scaffoldContentPadding)
+        val density = LocalDensity.current
 
-        when (listState) {
-            ListState.Loading -> LoadingIndicator(
-                modifier = indicatorModifier,
-            )
+        AnimatedContent(
+            targetState = listState,
+            transitionSpec = {
+                if (initialState == ListState.Loading && targetState == ListState.Loaded) {
+                    with(density) {
+                        sharedYAxisEnter() togetherWith
+                                fadeOut(animationSpec = tween(90))
+                    }
+                } else {
+                    (fadeIn(animationSpec = tween(220, delayMillis = 90)) +
+                            scaleIn(initialScale = 0.92f, animationSpec = tween(220, delayMillis = 90)))
+                        .togetherWith(fadeOut(animationSpec = tween(90)))
+                }
+            },
+            label = "",
+        ) { listState ->
+            when (listState) {
+                ListState.Loading -> LoadingIndicator(
+                    modifier = indicatorModifier,
+                )
 
-            is ListState.Empty -> EmptyList(
-                text = listState.text,
-                modifier = indicatorModifier,
-            )
+                is ListState.Empty -> EmptyList(
+                    text = listState.text,
+                    modifier = indicatorModifier,
+                )
 
-            ListState.NoSearchResults -> NoSearchResults(
-                modifier = indicatorModifier,
-            )
+                ListState.NoSearchResults -> NoSearchResults(
+                    modifier = indicatorModifier,
+                )
 
-            ListState.Loaded -> LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                content = content,
-                contentPadding = scaffoldContentPadding + contentPadding,
-                state = lazyListState,
-                verticalArrangement = verticalArrangement,
-            )
+                ListState.Loaded -> LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    content = content,
+                    contentPadding = scaffoldContentPadding + contentPadding,
+                    state = lazyListState,
+                    verticalArrangement = verticalArrangement,
+                )
+            }
         }
     }
 
