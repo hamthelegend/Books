@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +33,14 @@ fun BookContent(
     book: Book,
     modifier: Modifier = Modifier,
 ) {
-    var title by rememberMutableStateOf(book.title)
+    var author by rememberMutableStateOf(book.author)
+
+    fun onOverflow(textLayoutResult: TextLayoutResult) {
+        if (textLayoutResult.hasVisualOverflow) {
+            author = author.dropLast(2)
+            author += "…"
+        }
+    }
 
     Row(
         modifier = modifier,
@@ -49,21 +57,17 @@ fun BookContent(
             )
             Row {
                 Text(
-                    text = book.author,
+                    text = author,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
+                    onTextLayout = ::onOverflow,
                 )
                 Text(
                     text = " · ${book.datePublished.year}",
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
-                    onTextLayout = { result ->
-                        if (result.hasVisualOverflow) {
-                            title.drop(1)
-                            title += "…"
-                        }
-                    }
+                    onTextLayout = ::onOverflow,
                 )
             }
         }
