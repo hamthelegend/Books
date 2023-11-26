@@ -13,22 +13,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.model.Sample
 import com.thebrownfoxx.books.ui.theme.AppTheme
 import com.thebrownfoxx.components.HorizontalSpacer
+import com.thebrownfoxx.components.extension.rememberMutableStateOf
 
 @Composable
 fun BookContent(
     book: Book,
     modifier: Modifier = Modifier,
 ) {
+    var title by rememberMutableStateOf(book.title)
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -39,16 +44,26 @@ fun BookContent(
             Text(
                 text = book.title,
                 style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Row {
                 Text(
                     text = book.author,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
+                    maxLines = 1,
                 )
                 Text(
                     text = " · ${book.datePublished.year}",
                     style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    onTextLayout = { result ->
+                        if (result.hasVisualOverflow) {
+                            title.drop(1)
+                            title += "…"
+                        }
+                    }
                 )
             }
         }
