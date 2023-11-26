@@ -30,7 +30,7 @@ fun DatePickerDialog(
         if (initialDate != null) {
             state.setSelection(
                 initialDate
-                    .atStartOfDay()
+                    .atTime(12, 0)
                     .atZone(ZoneId.systemDefault())
                     .toInstant()
                     .toEpochMilli()
