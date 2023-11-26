@@ -106,52 +106,52 @@ fun BookScreen(
                     }
                 },
                 actions = {
-                    AnimatedContent(
-                        targetState = book.type,
-                        label = "",
-                    ) { bookType ->
-                        Row{
-                            if (bookType != BookType.Archived) {
-                                IconButton(
-                                    imageVector = Icons.TwoTone.Edit,
-                                    contentDescription = null,
-                                    onClick = onEdit,
-                                )
-                            }
-                            when (bookType) {
-                                BookType.NonFavorite -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        AnimatedVisibility(visible = book.type != BookType.Archived) {
+                            IconButton(
+                                imageVector = Icons.TwoTone.Edit,
+                                contentDescription = null,
+                                onClick = onEdit,
+                            )
+                        }
+                        AnimatedVisibility(visible = book.type != BookType.Favorite) {
+                            AnimatedContent(targetState = book.type, label = "") { bookType ->
+                                if (bookType == BookType.NonFavorite) {
                                     IconButton(
                                         imageVector = Icons.TwoTone.Archive,
                                         contentDescription = null,
                                         onClick = onArchive,
                                     )
-                                    IconButton(
-                                        imageVector = Icons.TwoTone.StarBorder,
-                                        contentDescription = null,
-                                        onClick = onFavorite,
-                                    )
-                                }
-                                BookType.Favorite -> {
-                                    IconButton(
-                                        imageVector = Icons.TwoTone.Star,
-                                        contentDescription = null,
-                                        onClick = onUnfavorite,
-                                        colors = IconButtonDefaults
-                                            .iconButtonColors(contentColor = colorScheme.primary),
-                                    )
-                                }
-                                BookType.Archived -> {
+                                } else {
                                     IconButton(
                                         imageVector = Icons.TwoTone.Unarchive,
                                         contentDescription = null,
                                         onClick = onUnarchive,
                                     )
-                                    IconButton(
-                                        imageVector = Icons.TwoTone.DeleteForever,
-                                        contentDescription = null,
-                                        onClick = { onDeleteDialogVisibleChange(true) },
-                                    )
                                 }
+                            }
+                        }
+                        AnimatedContent(targetState = book.type, label = "") { bookType ->
+                            when (bookType) {
+                                BookType.NonFavorite -> IconButton(
+                                    imageVector = Icons.TwoTone.StarBorder,
+                                    contentDescription = null,
+                                    onClick = onFavorite,
+                                )
+
+                                BookType.Favorite -> IconButton(
+                                    imageVector = Icons.TwoTone.Star,
+                                    contentDescription = null,
+                                    onClick = onUnfavorite,
+                                    colors = IconButtonDefaults
+                                        .iconButtonColors(contentColor = colorScheme.primary),
+                                )
+
+                                else -> IconButton(
+                                    imageVector = Icons.TwoTone.DeleteForever,
+                                    contentDescription = null,
+                                    onClick = { onDeleteDialogVisibleChange(true) },
+                                )
                             }
                         }
                     }
@@ -231,7 +231,7 @@ fun BookScreen(
         visible = deleteDialogVisible,
         onDismiss = { onDeleteDialogVisibleChange(false) },
         onConfirm = onDelete,
-        )
+    )
 }
 
 @Preview
