@@ -151,6 +151,7 @@ fun EditBookScreen(
     }
 
     DatePickerDialog(
+        initialDate = state.datePublished,
         visible = state.datePublishedPickerVisible,
         onDismissRequest = { stateChangeListener.onDatePublishedPickerVisibleChange(false) },
         onConfirm = { stateChangeListener.onDatePublishedChange(it) },
