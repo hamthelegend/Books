@@ -68,7 +68,6 @@ fun ProgressBar(
                 }
                 .padding(16.dp)
         ) {
-            // TODO: Fix animation
             ReadPagesTextField(
                 newPagesRead = newPagesRead,
                 book = book,
@@ -76,9 +75,7 @@ fun ProgressBar(
                 enabled = editable,
             )
             HorizontalSpacer(width = 16.dp)
-            Text(text = "/")
-            HorizontalSpacer(width = 8.dp)
-            Text(text = book.pages.toString())
+            Text(text = "out of ${book.pages}")
         }
     }
 }
