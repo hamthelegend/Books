@@ -11,9 +11,13 @@ import com.thebrownfoxx.books.ui.screens.navhost.BooksNavGraph
 @BooksNavGraph
 @Destination(navArgsDelegate = BookNavArgs::class)
 @Composable
-fun NonFavoriteBook(navigator: DestinationsNavigator) {
+fun NonFavoriteBook(
+    navigator: DestinationsNavigator,
+    showSnackbarMessage: (String) -> Unit,
+) {
     BookDestination(
         onNavigateUp = { navigator.navigateUp() },
         onEdit = { book -> navigator.navigate(NonFavoriteEditBookDestination(bookId = book.id)) },
+        showSnackbarMessage = showSnackbarMessage,
     )
 }

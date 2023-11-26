@@ -8,13 +8,18 @@ import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.realm.BookRealmDatabase
 import com.thebrownfoxx.books.ui.components.DialogState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ArchivedBooksViewModel(private val database: BookRealmDatabase) : ViewModel() {
+    private val _archivedBooksEvent = MutableSharedFlow<ArchivedBooksEvent>()
+    val archivedBooksEvent = _archivedBooksEvent.asSharedFlow()
+
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
@@ -67,6 +72,7 @@ class ArchivedBooksViewModel(private val database: BookRealmDatabase) : ViewMode
         if (state is DialogState.Pending) {
             viewModelScope.launch {
                 database.deleteBook(id = org.mongodb.kbson.ObjectId(state.value.id))
+                _archivedBooksEvent.emit(ArchivedBooksEvent.Delete(state.value))
             }
         }
         _deleteDialogState.update { DialogState.Confirmed() }
@@ -80,6 +86,7 @@ class ArchivedBooksViewModel(private val database: BookRealmDatabase) : ViewMode
         viewModelScope.launch {
             database.unarchiveAll()
             _unarchiveAllDialogVisible.update { false }
+            _archivedBooksEvent.emit(ArchivedBooksEvent.UnarchiveAll)
         }
     }
 
@@ -91,6 +98,7 @@ class ArchivedBooksViewModel(private val database: BookRealmDatabase) : ViewMode
         viewModelScope.launch {
             database.deleteAllArchived()
             _deleteAllDialogVisible.update { false }
+            _archivedBooksEvent.emit(ArchivedBooksEvent.DeleteAll)
         }
     }
 }

@@ -10,6 +10,12 @@ import com.thebrownfoxx.books.ui.screens.navhost.ArchiveNavGraph
 @ArchiveNavGraph
 @Destination(navArgsDelegate = EditBookNavArgs::class)
 @Composable
-fun ArchivedEditBook(navigator: DestinationsNavigator) {
-    EditBook(navigator = navigator)
+fun ArchivedEditBook(
+    navigator: DestinationsNavigator,
+    showSnackbarMessage: (String) -> Unit,
+) {
+    EditBook(
+        navigator = navigator,
+        showSnackbarMessage = showSnackbarMessage,
+    )
 }

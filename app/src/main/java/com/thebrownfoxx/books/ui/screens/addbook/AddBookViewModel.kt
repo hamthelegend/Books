@@ -2,6 +2,7 @@ package com.thebrownfoxx.books.ui.screens.addbook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.realm.BookRealmDatabase
 import com.thebrownfoxx.books.ui.extensions.updated
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,8 +14,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class AddBookViewModel(private val database: BookRealmDatabase) : ViewModel() {
-    private val _navigateUp = MutableSharedFlow<Unit>()
-    val navigateUp = _navigateUp.asSharedFlow()
+    private val _bookAdded = MutableSharedFlow<Book>()
+    val bookAdded = _bookAdded.asSharedFlow()
 
     private val _state = MutableStateFlow(AddBookState())
     val state = _state.asStateFlow()
@@ -66,7 +67,14 @@ class AddBookViewModel(private val database: BookRealmDatabase) : ViewModel() {
                     datePublished = state.datePublished!!,
                     pages = state.pages!!,
                 )
-                _navigateUp.emit(Unit)
+                _bookAdded.emit(
+                    Book(
+                        author = state.author,
+                        title = state.title,
+                        datePublished = state.datePublished!!,
+                        pages = state.pages!!,
+                    )
+                )
             }
         }
         _state.update { state }

@@ -24,6 +24,9 @@ class BookViewModel(
     private val _navigateUp = MutableSharedFlow<Unit>()
     val navigateUp = _navigateUp.asSharedFlow()
 
+    private val _bookEvent = MutableSharedFlow<BookEvent>()
+    val bookEvent = _bookEvent.asSharedFlow()
+
     val book = database.getBook(org.mongodb.kbson.ObjectId(bookId))
         .mapToStateFlow(
             scope = viewModelScope,
@@ -53,6 +56,7 @@ class BookViewModel(
                 pagesRead = newPagesRead.value ?: 0,
             )
             _newPagesRead.update { null }
+            _bookEvent.emit(BookEvent.UpdatedPagesRead)
         }
     }
 
@@ -60,6 +64,7 @@ class BookViewModel(
         viewModelScope.launch {
             if (book.value?.type == BookType.NonFavorite) {
                 database.favoriteBook(org.mongodb.kbson.ObjectId(bookId))
+                _bookEvent.emit(BookEvent.Favorited)
             }
         }
     }
@@ -68,6 +73,7 @@ class BookViewModel(
         viewModelScope.launch {
             if (book.value?.type == BookType.Favorite) {
                 database.unfavoriteBook(org.mongodb.kbson.ObjectId(bookId))
+                _bookEvent.emit(BookEvent.Unfavorited)
             }
         }
     }
@@ -76,6 +82,7 @@ class BookViewModel(
         viewModelScope.launch {
             if (book.value?.type == BookType.NonFavorite) {
                 database.archiveBook(org.mongodb.kbson.ObjectId(bookId))
+                _bookEvent.emit(BookEvent.Archived)
                 _navigateUp.emit(Unit)
             }
         }
@@ -85,6 +92,7 @@ class BookViewModel(
         viewModelScope.launch {
             if (book.value?.type == BookType.Archived) {
                 database.unarchiveBook(org.mongodb.kbson.ObjectId(bookId))
+                _bookEvent.emit(BookEvent.Unarchived)
             }
         }
     }
@@ -97,6 +105,7 @@ class BookViewModel(
         viewModelScope.launch {
             if (book.value?.type == BookType.Archived) {
                 database.deleteBook(org.mongodb.kbson.ObjectId(bookId))
+                _bookEvent.emit(BookEvent.Deleted)
                 _navigateUp.emit(Unit)
             }
         }

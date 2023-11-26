@@ -10,7 +10,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.thebrownfoxx.books.application
 
 @Composable
-fun EditBook(navigator: DestinationsNavigator) {
+fun EditBook(
+    navigator: DestinationsNavigator,
+    showSnackbarMessage: (String) -> Unit,
+) {
     val viewModel = viewModel {
         EditBookViewModel(
             database = application.database,
@@ -21,8 +24,11 @@ fun EditBook(navigator: DestinationsNavigator) {
     with(viewModel) {
         val state by state.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            navigateUp.collect { navigator.navigateUp() }
+        LaunchedEffect(bookEdited) {
+            bookEdited.collect { book ->
+                showSnackbarMessage("${book.title} has been updated")
+                navigator.navigateUp()
+            }
         }
 
         EditBookScreen(

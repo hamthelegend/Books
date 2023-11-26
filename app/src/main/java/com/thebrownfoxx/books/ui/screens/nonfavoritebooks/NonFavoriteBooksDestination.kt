@@ -1,6 +1,7 @@
 package com.thebrownfoxx.books.ui.screens.nonfavoritebooks
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,7 +15,10 @@ import com.thebrownfoxx.books.ui.screens.navhost.BooksNavGraph
 @BooksNavGraph(start = true)
 @Destination
 @Composable
-fun NonFavoriteBooks(navigator: DestinationsNavigator) {
+fun NonFavoriteBooks(
+    navigator: DestinationsNavigator,
+    showSnackbarMessage: (String) -> Unit,
+) {
     val viewModel = viewModel {
         NonFavoriteBooksViewModel(application.database)
     }
@@ -22,6 +26,12 @@ fun NonFavoriteBooks(navigator: DestinationsNavigator) {
     with(viewModel) {
         val books by books.collectAsStateWithLifecycle()
         val searchQuery by searchQuery.collectAsStateWithLifecycle()
+
+        LaunchedEffect(bookArchived) {
+            bookArchived.collect { book ->
+                showSnackbarMessage("${book.title} has been archived")
+            }
+        }
         
         NonFavoriteBooksScreen(
             books = books,

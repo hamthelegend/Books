@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamthelegend.enchantmentorder.extensions.mapToStateFlow
+import com.thebrownfoxx.books.model.Book
 import com.thebrownfoxx.books.realm.BookRealmDatabase
 import com.thebrownfoxx.books.ui.extensions.updated
 import com.thebrownfoxx.books.ui.screens.navArgs
@@ -25,8 +26,8 @@ class EditBookViewModel(
             realmBook?.toBook()
         }
 
-    private val _navigateUp = MutableSharedFlow<Unit>()
-    val navigateUp = _navigateUp.asSharedFlow()
+    private val _bookEdited = MutableSharedFlow<Book>()
+    val bookEdited = _bookEdited.asSharedFlow()
 
     private val _state = MutableStateFlow(EditBookState())
     val state = _state.asStateFlow()
@@ -87,7 +88,7 @@ class EditBookViewModel(
                     datePublished = state.datePublished!!,
                     pages = state.pages!!,
                 )
-                _navigateUp.emit(Unit)
+                _bookEdited.emit(book.value!!)
             }
         }
         _state.update { state }

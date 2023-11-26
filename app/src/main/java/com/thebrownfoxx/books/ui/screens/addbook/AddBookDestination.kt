@@ -13,14 +13,20 @@ import com.thebrownfoxx.books.ui.screens.navhost.BooksNavGraph
 @BooksNavGraph
 @Destination
 @Composable
-fun AddBook(navigator: DestinationsNavigator) {
+fun AddBook(
+    navigator: DestinationsNavigator,
+    showSnackbarMessage: (String) -> Unit,
+) {
     val viewModel = viewModel { AddBookViewModel(application.database) }
 
     with(viewModel) {
         val state by state.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            navigateUp.collect { navigator.navigateUp() }
+        LaunchedEffect(bookAdded) {
+            bookAdded.collect { book ->
+                showSnackbarMessage("${book.title} has been added")
+                navigator.navigateUp()
+            }
         }
 
         AddBookScreen(
