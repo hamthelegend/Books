@@ -1,6 +1,5 @@
 package com.thebrownfoxx.books.ui.screens.book
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -55,11 +54,6 @@ fun ProgressBar(
     val progressColor = colorScheme.primaryContainer
     val progress by animateFloatAsState(book.readingProgress, label = "")
 
-    val spacer by animateDpAsState(
-        targetValue = if (editable) 16.dp else 8.dp,
-        label = ""
-    )
-
     Card(modifier) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -75,21 +69,13 @@ fun ProgressBar(
                 .padding(16.dp)
         ) {
             // TODO: Fix animation
-            AnimatedContent(
-                targetState = editable,
-                label = "",
-            ) { editable ->
-                if (editable) {
-                    ReadPagesTextField(
-                        newPagesRead = newPagesRead,
-                        book = book,
-                        onNewPagesReadChange = onNewPagesReadChange
-                    )
-                } else {
-                    Text(text = book.pagesRead.toString())
-                }
-            }
-            HorizontalSpacer(width = spacer)
+            ReadPagesTextField(
+                newPagesRead = newPagesRead,
+                book = book,
+                onNewPagesReadChange = onNewPagesReadChange,
+                enabled = editable,
+            )
+            HorizontalSpacer(width = 16.dp)
             Text(text = "/")
             HorizontalSpacer(width = 8.dp)
             Text(text = book.pages.toString())
@@ -102,12 +88,18 @@ private fun ReadPagesTextField(
     newPagesRead: Int?,
     book: Book,
     onNewPagesReadChange: (String) -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
 
     var textFieldInFocus by rememberMutableStateOf(false)
     val textFieldOutlineColor by animateColorAsState(
-        targetValue = if (textFieldInFocus) colorScheme.primary else colorScheme.outline,
+        targetValue = when {
+            textFieldInFocus -> colorScheme.primary
+            enabled -> colorScheme.outline
+            else -> colorScheme.outline.copy(alpha = 0.2f)
+        },
         label = "",
     )
     val textFieldOutlineWidth by animateDpAsState(
@@ -126,6 +118,7 @@ private fun ReadPagesTextField(
             containerColor = Color.Transparent,
             contentColor = colorScheme.onPrimaryContainer,
         ),
+        modifier = modifier,
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -150,6 +143,7 @@ private fun ReadPagesTextField(
                 keyboardOptions = KeyboardOptions.Default
                     .copy(keyboardType = KeyboardType.Number),
                 cursorBrush = SolidColor(colorScheme.primary),
+                enabled = enabled,
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .width(IntrinsicSize.Min),
